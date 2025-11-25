@@ -94,3 +94,4 @@ classDiagram
     OrdemDeServico "1" --> "1" Carro : é para
     OrdemDeServico "1" --> "1" Cliente : solicitada por
     OrdemDeServico "1" o-- "1..*" Servico : contém
+\n
