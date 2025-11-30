@@ -1,6 +1,6 @@
 public class Loja {
 
-    private static Loja instancia; // Singleton
+    private static Loja instancia; //singleton
     private String nomeLoja;
     private String local;
 
@@ -8,7 +8,7 @@ public class Loja {
     private GerenciadorDeClientes gerenciadorClientes;
     private GerenciadorDeVendas gerenciadorVendas;
 
-    // Construtor Privado
+    //construtor privado
     private Loja(String nomeL, String localL) {
         this.nomeLoja = nomeL;
         this.local = localL;
@@ -20,7 +20,6 @@ public class Loja {
         System.out.println("Loja '" + nomeL + "' aberta em " + localL + " (Singleton inicializado).");
     }
 
-    // Método de Acesso Global
     public static Loja getInstance(String nomeL, String localL) {
         if (instancia == null) {
             instancia = new Loja(nomeL, localL);
@@ -28,7 +27,6 @@ public class Loja {
         return instancia;
     }
 
-    // Métodos de conveniência (delegação para o estoque, resolve erros do Main)
     public void adicionarCarroAoEstoque(Carro carro) {
         this.gerenciadorEstoque.adicionarCarro(carro);
     }
@@ -41,7 +39,6 @@ public class Loja {
         return this.gerenciadorEstoque.removerCarro(idCarro);
     }
 
-    // Getters para os Gerenciadores (resolve erros do Main)
     public infoEstoque getGerenciadorEstoque() { return gerenciadorEstoque; }
     public GerenciadorDeClientes getGerenciadorClientes() { return gerenciadorClientes; }
     public GerenciadorDeVendas getGerenciadorVendas() { return gerenciadorVendas; }
