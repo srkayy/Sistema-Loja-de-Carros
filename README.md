@@ -5,7 +5,9 @@ config:
   theme: redux-dark
 ---
 classDiagram
-    direction LR
+    direction TD 
+    
+    %% 1. Entidades de Dados (Encapsuladas)
     class Cliente {
         -int cpf
         -int telefone
@@ -32,6 +34,8 @@ classDiagram
         +String tipoPagamento
         +exibirDetalhes()
     }
+
+    %% 2. Lógica e Cálculo
     class CalculoPraVenda {
         +double lucro
         +double valorFinal
@@ -43,6 +47,8 @@ classDiagram
         +registrarPagamento()
         +exibirResumoVenda()
     }
+
+    %% 3. Gerenciadores
     class GerenciadorDeClientes {
         -List~Cliente~ listaClientes
         +cadastrarCliente()
@@ -57,6 +63,8 @@ classDiagram
         +adicionarCarro()
         +removerCarro()
     }
+
+    %% 4. Singleton (Loja)
     class Loja {
         -static Loja instancia
         -infoEstoque gerenciadorEstoque
@@ -66,14 +74,20 @@ classDiagram
         +adicionarCarroAoEstoque()
         +getGerenciadorClientes()
     }
+
+    %% RELAÇÕES (Associações)
     venda "1" --> "1" Cliente : tem
     venda "1" --> "1" Carro : vende
     venda "1" --> "1" CalculoPraVenda : usa
     venda "1" --> "1" pagamento : tem
     venda "1" --> "0..*" Servico : inclui
+
+    %% Loja (Controle)
     Loja ..> infoEstoque : usa (Gerencia)
     Loja ..> GerenciadorDeClientes : usa (Gerencia)
     Loja ..> GerenciadorDeVendas : usa (Gerencia)
+
+    %% Gerenciadores (Agregação)
     GerenciadorDeClientes "1" o-- "0..*" Cliente : GERENCIA
     GerenciadorDeVendas "1" o-- "0..*" venda : GERENCIA
     infoEstoque "1" o-- "0..*" Carro : GERENCIA
