@@ -16,7 +16,6 @@ public class Carro {
         this.idCarro = id;
     }
 
-    // Getters
     public String getNomeCarro() { return nomeCarro; }
     public int getAnoCarro() { return anoCarro; }
     public double getValorCompra() { return valorCompra; }
