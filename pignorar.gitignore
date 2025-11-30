@@ -1,6 +1,0 @@
-.idea/
-*.iml # Isso ignora o Sistema-POO-master.iml
-
-*.class
-out/
-bin/
