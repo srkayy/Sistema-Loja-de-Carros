@@ -70,7 +70,7 @@ classDiagram
     }
     Loja ..> InfoEstoque : usa
     Loja ..> GerenciadorDeVendas : usa
-    Loja "1" o-- "0..*" Cliente : GERENCIA (NOVA AGREGAÇÃO)
+    Loja "1" o-- "0..*"
 
     GerenciadorDeVendas "1" o-- "0..*" Venda : GERENCIA
     InfoEstoque "1" o-- "0..*" Carro : GERENCIA
