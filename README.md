@@ -1,4 +1,3 @@
-```mermaid
 ---
 config:
   layout: elk
@@ -29,10 +28,18 @@ classDiagram
         -double valorServ
         +getValorServ()
     }
-    class pagamento {
+    class Pagamento {
         +double valorTotal
         +String tipoPagamento
         +exibirDetalhes()
+    }
+    
+    %% Nova Classe: Ordem de Serviço
+    class OrdemDeServico {
+        -int idOS
+        -String statusOS
+        +dataAbertura
+        +calcularTotalServicos()
     }
 
     %% 2. Lógica e Cálculo
@@ -41,9 +48,9 @@ classDiagram
         +double valorFinal
         +calculoPraVender()
     }
-    class venda {
+    class Venda {
         +int idVenda
-        +calcularVenda(lucro)
+        +calcularVenda(lucro, totalServicos)
         +registrarPagamento()
         +exibirResumoVenda()
     }
@@ -55,10 +62,10 @@ classDiagram
         +buscarClientePorCpf()
     }
     class GerenciadorDeVendas {
-        -List~venda~ historicoVendas
+        -List~Venda~ historicoVendas
         +registrarVenda()
     }
-    class infoEstoque {
+    class InfoEstoque {
         -List~Carro~ carrosEmEstoque
         +adicionarCarro()
         +removerCarro()
@@ -67,7 +74,7 @@ classDiagram
     %% 4. Singleton (Loja)
     class Loja {
         -static Loja instancia
-        -infoEstoque gerenciadorEstoque
+        -InfoEstoque gerenciadorEstoque
         -GerenciadorDeClientes gerenciadorClientes
         -GerenciadorDeVendas gerenciadorVendas
         +static getInstance()
@@ -75,19 +82,26 @@ classDiagram
         +getGerenciadorClientes()
     }
 
-    %% RELAÇÕES (Associações)
-    venda "1" --> "1" Cliente : tem
-    venda "1" --> "1" Carro : vende
-    venda "1" --> "1" CalculoPraVenda : usa
-    venda "1" --> "1" pagamento : tem
-    venda "1" --> "0..*" Servico : inclui
+    %% RELAÇÕES (Associações e Agregações)
+    
+    %% Venda
+    Venda "1" --> "1" Cliente : tem
+    Venda "1" --> "1" Carro : vende
+    Venda "1" --> "1" CalculoPraVenda : usa
+    Venda "1" --> "1" Pagamento : tem
+    Venda "1" --> "0..1" OrdemDeServico : pode incluir (Serviços adicionais)
 
+    %% OrdemDeServico (A chave para a realidade de serviços)
+    OrdemDeServico "1" --> "1" Carro : é para
+    OrdemDeServico "1" o-- "1..*" Servico : contém (Agregação de 1 ou mais serviços)
+    OrdemDeServico "1" --> "1" Cliente : solicitada por
+    
     %% Loja (Controle)
-    Loja ..> infoEstoque : usa (Gerencia)
+    Loja ..> InfoEstoque : usa (Gerencia)
     Loja ..> GerenciadorDeClientes : usa (Gerencia)
     Loja ..> GerenciadorDeVendas : usa (Gerencia)
 
     %% Gerenciadores (Agregação)
     GerenciadorDeClientes "1" o-- "0..*" Cliente : GERENCIA
-    GerenciadorDeVendas "1" o-- "0..*" venda : GERENCIA
-    infoEstoque "1" o-- "0..*" Carro : GERENCIA
+    GerenciadorDeVendas "1" o-- "0..*" Venda : GERENCIA
+    InfoEstoque "1" o-- "0..*" Carro : GERENCIA
