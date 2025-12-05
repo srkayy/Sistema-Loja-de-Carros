@@ -1,25 +1,18 @@
 ```mermaid
-
 ---
 config:
-  layout: elk
+  layout: dagre
   theme: redux-dark
 ---
 classDiagram
     direction TD
-
-    %% 4. Singleton (Loja) e Gerenciadores (Topo)
     class Loja {
         -static Loja instancia
         -InfoEstoque gerenciadorEstoque
-        -GerenciadorDeClientes gerenciadorClientes
         -GerenciadorDeVendas gerenciadorVendas
+        -List~Cliente~ listaClientes  %% NOVA LISTA AQUI
         +static getInstance()
         +adicionarCarroAoEstoque()
-        +getGerenciadorClientes()
-    }
-    class GerenciadorDeClientes {
-        -List~Cliente~ listaClientes
         +cadastrarCliente()
         +buscarClientePorCpf()
     }
@@ -32,8 +25,6 @@ classDiagram
         +adicionarCarro()
         +removerCarro()
     }
-
-    %% 1. Entidades de Dados Principais (Meio)
     class Cliente {
         -int cpf
         -int telefone
@@ -67,8 +58,6 @@ classDiagram
         +String tipoPagamento
         +exibirDetalhes()
     }
-
-    %% 2. Lógica e Cálculo / 1. Entidades de Suporte (Base)
     class Servico {
         -String descricao
         -double valorServ
@@ -79,24 +68,17 @@ classDiagram
         +double valorFinal
         +calculoPraVender()
     }
-
-    %% RELAÇÕES - Loja e Gerenciadores (Organização de cima para baixo)
     Loja ..> InfoEstoque : usa
-    Loja ..> GerenciadorDeClientes : usa
     Loja ..> GerenciadorDeVendas : usa
+    Loja "1" o-- "0..*" Cliente : GERENCIA (NOVA AGREGAÇÃO)
 
-    GerenciadorDeClientes "1" o-- "0..*" Cliente : GERENCIA
     GerenciadorDeVendas "1" o-- "0..*" Venda : GERENCIA
     InfoEstoque "1" o-- "0..*" Carro : GERENCIA
-
-    %% RELAÇÕES - Venda (Relações em paralelo/evitando cruzamento)
     Venda "1" --> "1" Cliente : tem
     Venda "1" --> "1" Carro : vende
     Venda "1" --> "1" Pagamento : tem
     Venda "1" --> "1" CalculoPraVenda : usa
     Venda "1" --> "0..1" OrdemDeServico : pode incluir
-
-    %% RELAÇÕES - OrdemDeServico (Relações com classes de suporte)
     OrdemDeServico "1" --> "1" Carro : é para
     OrdemDeServico "1" --> "1" Cliente : solicitada por
     OrdemDeServico "1" o-- "1..*" Servico : contém
